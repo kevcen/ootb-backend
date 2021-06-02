@@ -1,23 +1,41 @@
-default:
-  image: node:latest
-  before_script:
-    - npm install
+image: node:latest
 
+services:
+  - postgres:latest
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm install
+
+# Build and compile
 build-job:
-  stage: build
-  script:
-    - npm run build
+stage: build
+script:
+  - npm run build
 
 
-test-job:
-  stage: test
+# Test components
+test_comp:
+  stage : test
   script:
     - npm run test
 
-deploy-prod:
-  stage: deploy
+# Test database
+test_db:
+  stage : test
   script:
-    - apt-get update
-    - apt-get install -y ruby-dev
+    - npm run test
+
+# Deploy to heroku
+deploy_heroku:
+  stage : deploy
+  image: ruby:latest
+  script:
     - gem install dpl
     - dpl --provider=heroku --app=backend-drp38 --api-key=$JACK_HEROKU_API_KEY
+  only:
+    - master
+

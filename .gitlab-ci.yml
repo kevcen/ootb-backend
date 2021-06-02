@@ -1,19 +1,18 @@
-image: node:latest
+default: 
+  image: node:latest
+  before_script:
+    - npm install
+  services:
+  - postgres:latest
 
 stages:
   - build
   - test
   - deploy
-  
-services:
-  - postgres:latest
 
 cache:
   paths:
     - node_modules/
-
-before_script:
-  - npm install
 
 # Build and compile
 build:

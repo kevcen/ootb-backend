@@ -1,5 +1,10 @@
 image: node:latest
 
+stages:
+  - build
+  - test
+  - deploy
+  
 services:
   - postgres:latest
 
@@ -11,10 +16,10 @@ before_script:
   - npm install
 
 # Build and compile
-build-job:
-stage: build
-script:
-  - npm run build
+build:
+  stage: build
+  script:
+    - npm run build
 
 
 # Test components

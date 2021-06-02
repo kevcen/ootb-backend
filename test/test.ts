@@ -2,9 +2,9 @@ import request from 'supertest';
 import app from '../app';
 
 describe('App', function() {
-  it('has the default page', function(done) {
+  it('has the default page', function() {
     request(app)
       .get('/')
-      .expect(/Welcome to Express/, done);
+      .expect("This is the home endpoint");
   });
 }); 

@@ -37,8 +37,9 @@ test_db:
 deploy_heroku:
   stage : deploy
   image: ruby:latest
-  script:
+  before_script:
     - gem install dpl
+  script:
     - dpl --provider=heroku --app=$HEROKU_APP --api-key=$HEROKU_API_KEY
   only:
     - master

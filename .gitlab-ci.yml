@@ -9,7 +9,15 @@ build-job:
     - npm run build
 
 
-test-job1:
+test-job:
   stage: test
   script:
     - npm run test
+
+deploy-prod:
+  stage: deploy
+  script:
+    - apt-get update
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=backend-drp38 --api-key=$JACK_HEROKU_API_KEY

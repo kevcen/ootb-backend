@@ -1,9 +1,11 @@
 default: 
   image: node:latest
+  
   before_script:
     - npm install
+  
   services:
-  - postgres:latest
+    - postgres:latest
 
 stages:
   - build
@@ -29,13 +31,13 @@ test_comp:
 
 # Test database
 test_db:
-  stage : test
+  stage: test
   script:
     - npm run test
 
 # Deploy to heroku
 deploy_heroku:
-  stage : deploy
+  stage: deploy
   image: ruby:latest
   before_script:
     - gem install dpl

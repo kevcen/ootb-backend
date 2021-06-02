@@ -7,7 +7,6 @@ var logger = require('morgan');
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 
-
 var app = express();
 
 // view engine setup

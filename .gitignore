@@ -1,6 +1,9 @@
 #build
 build/
 
+# packages
+package-lock.json
+
 # Logs
 logs
 *.log

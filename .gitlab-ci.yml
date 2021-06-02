@@ -1,0 +1,17 @@
+default:
+  before_script:
+    - apt-get update && apt-get install -y curl
+    - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+    - apt-get install -y nodejs
+    - npm install
+
+build-job:
+  stage: build
+  script:
+    - npm run build
+
+
+test-job1:
+  stage: test
+  script:
+    - npm run test

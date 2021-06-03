@@ -8,7 +8,7 @@ enum Gender {
 }
 
 /* Submit a profile of giftee so that gift recommendations can be generated and sent */
-router.post('/submit', function(req, res, next) {
+router.post('/', function(req, res) {
   var interest : string[] = req.body.interest;
   var gender : Gender = req.body.gender;
   var minPrice : Number = req.body.minPrice;
@@ -19,7 +19,7 @@ router.post('/submit', function(req, res, next) {
   //var itemList = getGifts(interest, gender, minPrice, maxPrice)
   
   var itemList : [string[], string[]] = [[], []]; // [list of image links, list of product page links]
-  res.end(JSON.stringify(itemList));
+  res.send(JSON.stringify(itemList));
 });
 
 export default router

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../app';
+import app from '../../app';
 
 describe('Submit', function() {
   it('has the default page', function(done) {

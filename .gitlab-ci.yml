@@ -22,16 +22,9 @@ build:
   script:
     - npm run build
 
-
 # Test components
-test_comp:
+test:
   stage : test
-  script:
-    - npm run test
-
-# Test database
-test_db:
-  stage: test
   script:
     - npm run test
 

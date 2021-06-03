@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon server.ts",
     "build": "tsc --project ./",
-    "test": "mocha --exit -r ts-node/register ./test/*",
+    "test": "mocha --exit -r ts-node/register ./__tests__/**/*.ts",
     "start": "node ./build/server"
   },
   "dependencies": {

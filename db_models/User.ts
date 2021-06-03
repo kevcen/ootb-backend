@@ -1,8 +1,8 @@
-import { Table, Column, Model, HasMany, CreatedAt } from "sequelize-typescript";
+import { Table, Column, Model, HasMany, CreatedAt, BelongsTo } from "sequelize-typescript";
 import Product from "./Product";
 
 @Table
-class User extends Model<User> {
+class User extends Model {
   @Column
   firstname!: string;
 
@@ -14,9 +14,6 @@ class User extends Model<User> {
 
   @Column
   password!: string;
-
-  @HasMany(() => Product)
-  wishlist?: Product[]
 
   @Column
   age!: number;

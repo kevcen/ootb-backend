@@ -7,7 +7,8 @@ var logger = require('morgan');
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
-import submitRouter from "./routes/submit";
+import quizRouter from "./routes/quiz";
+import productRouter from "./routes/products";
 
 var app = express();
 
@@ -25,7 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // setup endpoints
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/submit', submitRouter);
+app.use('/quiz', quizRouter);
+app.use('/products', productRouter);
 
 // enable corse for all origins
 app.use((req, res, next) => {

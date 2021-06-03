@@ -3,12 +3,9 @@ import Product from "./Product";
 import ProductCategory from "./ProductCategory";
 
 @Table
-class Category extends Model<Category> {
+class Category extends Model {
   @Column
   name!: string;
-
-  @HasMany(() => Category)
-  subcategories!: Category[];
 
   @BelongsToMany(() => Product, ()=>ProductCategory)
   products?: Product[];

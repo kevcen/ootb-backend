@@ -17,7 +17,7 @@ const sequelize = new Sequelize({
     }
   },
   storage: ":memory:",
-  models: [__dirname + "/models"],
+  models: [__dirname + "/db_models"],
 });
 
 export default sequelize;

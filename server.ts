@@ -1,6 +1,6 @@
 import http from "http";
 import app from "./app";
-import sequelize from "./controllers/database";
+import sequelize from "./database";
 
 /**
  * Get port from environment and store in Express.

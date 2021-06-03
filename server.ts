@@ -1,6 +1,6 @@
 import http from "http";
 import app from "./app";
-import sequelize from './controllers/database'
+import sequelize from "./controllers/database";
 
 /**
  * Get port from environment and store in Express.
@@ -67,9 +67,13 @@ function onError(error: any): void {
  * Event listener for HTTP server "listening" event.
  */
 function onListening() {
+  // bind server to port
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
   console.log("Listening on " + bind);
-  sequelize.sync({force : true}) // connect to database
-  console.log("Connected to DB " + sequelize.getDatabaseName());
+  // connect to database
+  sequelize
+    .sync({force:true})
+    .then(() => console.log("Connected to DB: " + sequelize.getDatabaseName()))
+    .catch((e) => console.log("Failed to connect to DB: " + e));
 }

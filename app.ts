@@ -1,5 +1,6 @@
 import createError from "http-errors";
 import express, {Request, Response, NextFunction }from "express";
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -20,9 +21,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// setup endpoints
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/submit', submitRouter);
+
+// enable corse for all origins
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Expose-Headers", "x-total-count");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
+  res.header("Access-Control-Allow-Headers", "Content-Type,authorization");
+
+  next();
+});
 
 // catch 404 and forward to error handler
 app.use(function(req : Request, res : Response, next : NextFunction) {

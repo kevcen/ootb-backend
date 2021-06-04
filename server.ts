@@ -73,7 +73,7 @@ function onListening() {
   console.log("Listening on " + bind);
   // connect to database
   sequelize
-    .sync({force:true})
+    .sync()
     .then(() => console.log("Connected to DB: " + sequelize.getDatabaseName()))
     .catch((e) => console.log("Failed to connect to DB: " + e));
 }

@@ -1,5 +1,6 @@
 import express from "express";
 import Category from "../db_models/Category";
+import Item from "../db_models/Item";
 import Product from "../db_models/Product";
 var router = express.Router();
 
@@ -12,7 +13,9 @@ router.post("/", async (req, res, next) => {
         {
           model: Category,
           where: { name: categories },
-        },
+        },{
+          model : Item
+        }
       ],
     });
     res.send(products);

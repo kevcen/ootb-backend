@@ -3,9 +3,11 @@ import {
   Column,
   Model,
   BelongsToMany,
-  DataType,
+  BelongsTo,
+  HasMany,
 } from "sequelize-typescript";
 import Category from "./Category";
+import Item from "./Item";
 import ProductCategory from "./ProductCategory";
 
 @Table
@@ -16,8 +18,8 @@ class Product extends Model {
   @Column
   image?: string;
 
-  @Column({ type: DataType.FLOAT })
-  price!: number;
+  @HasMany(()=>Item)
+  items!: Item[];
 
   @BelongsToMany(() => Category, () => ProductCategory)
   categories?: Category[];

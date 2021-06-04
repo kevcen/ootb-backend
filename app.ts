@@ -4,6 +4,7 @@ import express, {Request, Response, NextFunction }from "express";
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
@@ -12,6 +13,7 @@ import productRouter from "./routes/products";
 
 var app = express();
 
+app.use(cors())
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

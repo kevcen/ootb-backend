@@ -75,5 +75,4 @@ function onListening() {
   sequelize
     .sync()
     .then(() => console.log("Connected to DB: " + sequelize.getDatabaseName()))
-    .catch((e) => console.log("Failed to connect to DB: " + e));
 }

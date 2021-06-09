@@ -11,6 +11,7 @@ router.post("/", async (req, res, next) => {
   try {
     var categories: string[] = req.body.categories || [];
     var price: string[] = req.body.price || [0, Number.MAX_SAFE_INTEGER];
+    console.log(price);
     var relationship: string = req.body.relationship || "any";
     var gender: string = req.body.gender || "any"; 
     gender = ["Prefer not to say", "Other"].includes(gender) ? "any" : gender; 
@@ -23,31 +24,31 @@ router.post("/", async (req, res, next) => {
           where: { 
             name: categories
           },
-          // TODO: use, relationship, occasion
+          // TODO: use, occasion
         },{
           model : Item,
-          // where: {
-          //   cost: {
-          //     [Op.lte]: price[1],
-          //     [Op.gte]: price[0]
-          //   }
-          // }
+          where: {
+            cost: {
+              [Op.lte]: price[1],
+              [Op.gte]: price[0]
+            }
+          }
         }
       ],
-      // where: {
-      //   gender: {
-      //     [Op.or]: {
-      //       [Op.eq]: gender,
-      //       [Op.eq]: "any"
-      //     }
-      //   },
-      //   relationship: {
-      //     [Op.or]: {
-      //       [Op.eq]: relationship,
-      //       [Op.eq]: "any"
-      //     }
-      //   }
-      // }
+      where: {
+        gender: {
+          [Op.or]: {
+            [Op.eq]: gender,
+            [Op.eq]: "any"
+          }
+        },
+        relationship: {
+          [Op.or]: {
+            [Op.eq]: relationship,
+            [Op.eq]: "any"
+          }
+        }
+      }
     });
     res.send(products);
   } catch (error) {

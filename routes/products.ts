@@ -22,18 +22,6 @@ router.post("/", async (req, res, next) => {
           model: Category,
           where: { 
             name: categories,
-            gender: {
-              [Op.or]: {
-                [Op.eq]: gender,
-                [Op.eq]: "any"
-              }
-            },
-            relationship: {
-              [Op.or]: {
-                [Op.eq]: relationship,
-                [Op.eq]: "any"
-              }
-            }
           },
           // TODO: use, relationship, occasion
         },{
@@ -46,6 +34,20 @@ router.post("/", async (req, res, next) => {
           }
         }
       ],
+      where: {
+        gender: {
+          [Op.or]: {
+            [Op.eq]: gender,
+            [Op.eq]: "any"
+          }
+        },
+        relationship: {
+          [Op.or]: {
+            [Op.eq]: relationship,
+            [Op.eq]: "any"
+          }
+        }
+      }
     });
     res.send(products);
   } catch (error) {

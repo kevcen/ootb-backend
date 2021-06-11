@@ -9,13 +9,18 @@ const Op = Sequelize.Op;
 /* POST simple get products by categories */
 router.post("/", async (req, res, next) => {
   try {
-    var categories: string[] = req.body.categories || [];
+    console.log(req.body)
+    var categories: string[] = req.body.categories|| [] ;
+    console.log(categories)
     var price: string[] = req.body.price || [0, Number.MAX_SAFE_INTEGER];
     console.log(price);
-    var relationship: string = req.body.relationship || "any";
-    var gender: string = req.body.gender || "any"; 
-    gender = ["Prefer not to say", "Other"].includes(gender) ? "any" : gender; 
-    var occasion: string = req.body.occasion || "any";
+    var relationship: string = (req.body.relationship|| "any").toLowerCase() ;
+    console.log(relationship);
+    var gender: string = (req.body.gender || "any").toLowerCase() ; 
+    gender = ["prefer not to say", "other"].includes(gender) ? "any" : gender; 
+    console.log(gender);
+    var occasion: string = (req.body.occasion  || "any").toLowerCase();
+    console.log(occasion);
 
     var products: Product[] = await Product.findAll({
       include: [
@@ -50,7 +55,18 @@ router.post("/", async (req, res, next) => {
         }
       }
     });
-    res.send(products);
+
+    var filteredNames = new Set<string>();
+    var filteredProducts = new Set();
+    
+    products.forEach(product => {
+      if(!filteredNames.has(product.name)){
+        filteredProducts.add(product);
+        filteredNames.add(product.name)
+      }
+    });
+
+    res.send(Array.from(filteredProducts));
   } catch (error) {
     res.status(400).send({ error: error.message });
   }

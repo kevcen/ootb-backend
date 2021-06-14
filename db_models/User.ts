@@ -1,4 +1,11 @@
-import { Table, Column, Model, HasMany, CreatedAt, BelongsTo } from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  HasMany,
+  CreatedAt,
+  BelongsTo,
+} from "sequelize-typescript";
 import Product from "./Product";
 
 @Table
@@ -17,6 +24,9 @@ class User extends Model {
 
   @Column
   age!: number;
+
+  @Column
+  image?: string;
 
   @CreatedAt
   @Column

@@ -17,16 +17,19 @@ class User extends Model {
   lastname!: string;
 
   @Column
-  username!: string;
-
-  @Column
-  password!: string;
-
-  @Column
-  age!: number;
+  birthdate?: Date;
 
   @Column
   image?: string;
+
+  @Column
+  public?: boolean;
+
+  @Column
+  countryCode!: string;
+
+  @HasMany(()=>Product)
+  wishlist!: Product[]
 
   @CreatedAt
   @Column

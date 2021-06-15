@@ -99,100 +99,100 @@ router.post("/", async (req, res, next) => {
         gender: {
           [Op.or]: {
             [Op.in]: gender,
-            [Op.eq]: "any"
+            [Op.is]: null
           }
         },
         relationship: {
           [Op.or]: {
             [Op.in]: relationship,
-            [Op.eq]: "any"
+            [Op.is]: null
           }
         },
-        clothesstoretype: {
+        clothesStoreType: {
           [Op.or]: {
             [Op.in]: clothesStoreTypes,
             [Op.is]: null
           }
         },
-        clothingseason: {
+        clothingSeason: {
           [Op.or]: {
             [Op.in]: clothingSeasons,
             [Op.is]: null
           }
         },
-        fashionwear: {
+        fashionWear: {
           [Op.or]: {
             [Op.in]: fashionWear,
             [Op.is]: null
           }
         },
-        doescook: {
+        doesCook: {
           [Op.or]: {
             [Op.eq]: doesCook,
             [Op.is]: null
           }
         },
-        doesdrink: {
+        doesDrink: {
           [Op.or]: {
             [Op.eq]: doesDrink,
             [Op.is]: null
           }
         },
-        cuisines: {
+        cuisine: {
           [Op.or]: {
             [Op.in]: cuisines,
             [Op.is]: null
           }
         },
-        fragrancefamily: {
+        fragranceFamily: {
           [Op.or]: {
             [Op.in]: fragranceFamilies,
             [Op.is]: null
           }
         },
-        perfumetype: {
+        perfumeType: {
           [Op.or]: {
             [Op.in]: perfumeTypes,
             [Op.is]: null
           }
         },
-        hasgreenhouse: {
+        hasGreenhouse: {
           [Op.or]: {
             [Op.eq]: hasGreenhouse,
             [Op.is]: null
           }
         },
-        plantsize: {
+        plantSize: {
           [Op.or]: {
             [Op.in]: plantSizes,
             [Op.is]: null
           }
         },
-        planttype: {
+        plantType: {
           [Op.or]: {
             [Op.in]: plantTypes,
             [Op.is]: null
           }
         },
-        likesmakeup: {
+        likesMakeup: {
           [Op.or]: {
             [Op.eq]: likesMakeup,
             [Op.is]: null
           }
         },
-        beautyproducttype: {
+        beautyProductType: {
           [Op.or]: {
             [Op.in]: beautyProductTypes,
             [Op.is]: null
           }
         },
-        homeroom: {
+        homeRoom: {
           [Op.or]: {
             [Op.in]: homeRooms,
             [Op.is]: null
           }
         },
-        homestyle: {
+        homeStyle: {
           [Op.or]: {
             [Op.in]: homeStyles,
             [Op.is]: null
@@ -210,25 +210,25 @@ router.post("/", async (req, res, next) => {
             [Op.is]: null
           }
         },
-        cameratype: {
+        cameraType: {
           [Op.or]: {
             [Op.in]: cameraTypes,
             [Op.is]: null
           }
         },
-        photographyexperience: {
+        photographyExperience: {
           [Op.or]: {
             [Op.in]: photographyExperience,
             [Op.is]: null
           }
         },
-        playsport: {
+        playSport: {
           [Op.or]: {
             [Op.in]: playSports,
             [Op.is]: null
           }
         },
-        watchsport: {
+        watchSport: {
           [Op.or]: {
             [Op.in]: watchSports,
             [Op.is]: null
@@ -236,6 +236,8 @@ router.post("/", async (req, res, next) => {
         }
       }
     });
+
+    console.log(products)
     var filteredNames = new Set<string>();
     var filteredProducts = new Set();
     

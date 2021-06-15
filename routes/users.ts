@@ -62,18 +62,19 @@ router.post("/", upload, async (req, res, next) => {
 /* POST search for users based on filters. */
 router.post("/search", async (req, res, next) => {
   var searchValue = req.body.searchValue;
+  console.log(searchValue);
 
   var users: User[] = await User.findAll({
     where: {
       [Op.or]: [
         {
           firstname: {
-            [Op.like]: "%" + searchValue + "%",
+            [Op.iLike]: "%" + searchValue + "%",
           },
         },
         {
           lastname: {
-            [Op.like]: "%" + searchValue + "%",
+            [Op.iLike]: "%" + searchValue + "%",
           },
         },
       ],

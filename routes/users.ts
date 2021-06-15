@@ -5,6 +5,8 @@ import multer from "multer";
 import { Op } from "sequelize";
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 import Cloudinary from "cloudinary";
+import { serialize } from "v8";
+import Wishlist from "../db_models/Wishlist";
 require("dotenv").config();
 
 Cloudinary.v2.config({
@@ -39,33 +41,35 @@ router.post("/", upload.single("image"), async (req, res) => {
   const {
     firstname,
     lastname,
-    wishlist,
+    wishlist: wishlistString,
     countryCode,
     isPublic,
   }: {
     firstname: string;
     lastname: string;
-    wishlist: Product[];
+    wishlist: string;
     countryCode: string;
     isPublic: boolean;
   } = req.body;
-  console.log(req.file);
+  
+  const wishlist: Product[] = JSON.parse(wishlistString);
+
   let image;
   if (req.file) {
-    //req.url ?
     image = req.file.path;
   }
-  console.log("IMAGE IS");
-  console.log(image);
+
   let user = new User({
     image,
     firstname,
     lastname,
-    wishlist,
     countryCode,
     isPublic,
   });
-  user = await user.save();
+
+  user = await user.save()
+  await user.$set("wishlist", wishlist.map(prod => prod.id))
+
   res.send(user);
 });
 

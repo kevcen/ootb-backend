@@ -30,7 +30,7 @@ class User extends Model {
   @Column
   countryCode!: string;
 
-  @BelongsToMany(()=>Product, () => Wishlist)
+  @BelongsToMany(() => Product, () => Wishlist)
   wishlist!: Product[];
 
   @CreatedAt

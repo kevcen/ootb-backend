@@ -12,10 +12,10 @@ import Category from "./Category";
 import Item from "./Item";
 import ProductCategory from "./ProductCategory";
 import User from "./User";
+import Wishlist from "./Wishlist";
 
 @Table
 class Product extends Model {
-
   @Column
   name!: string;
 
@@ -90,16 +90,15 @@ class Product extends Model {
 
   @Column
   watchSport?: string;
-  
-  @HasMany(()=>Item)
+
+  @HasMany(() => Item)
   items!: Item[];
 
   @BelongsToMany(() => Category, () => ProductCategory)
   categories?: Category[];
 
-  @ForeignKey(() => User)
-  @Column
-  userId! :number;
+  @BelongsToMany(() => User, () => Wishlist)
+  users?: User[];
 }
 
 export default Product;

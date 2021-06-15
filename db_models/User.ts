@@ -5,8 +5,10 @@ import {
   HasMany,
   CreatedAt,
   BelongsTo,
+  BelongsToMany,
 } from "sequelize-typescript";
 import Product from "./Product";
+import Wishlist from "./Wishlist";
 
 @Table
 class User extends Model {
@@ -28,8 +30,8 @@ class User extends Model {
   @Column
   countryCode!: string;
 
-  @HasMany(()=>Product)
-  wishlist!: Product[]
+  @BelongsToMany(()=>Product, () => Wishlist)
+  wishlist!: Product[];
 
   @CreatedAt
   @Column

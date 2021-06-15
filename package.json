@@ -9,6 +9,7 @@
     "start": "node ./build/server"
   },
   "dependencies": {
+    "cloudinary": "^1.26.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
@@ -17,6 +18,7 @@
     "http-errors": "~1.6.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
     "pug": "^3.0.2",

@@ -1,33 +1,40 @@
 import express from "express";
 import Product from "../db_models/Product";
 import User from "../db_models/User";
-import { v4 } from "uuid";
-import path from "path";
 import multer from "multer";
-import mime from "mime";
-const { Op } = require("sequelize");
+import { Op } from "sequelize";
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+import Cloudinary from "cloudinary";
+require("dotenv").config();
 
-var router = express.Router();
-
-/* GET get a user. */
-router.get("/", function (req, res, next) {
-  res.send("This is the user endpoint");
+Cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-let storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/profiles");
-  },
-  filename: function (req, file, cb) {
-    cb(null, v4() + "-" + Date.now() + ".jpg");
+const storage = new CloudinaryStorage({
+  cloudinary: Cloudinary.v2,
+  params: {
+    folder: (req: any, file: any) => "out-of-the-box",
+    format: async (req: any, file: any) => "jpg", // supports promises as well
+    public_id: (req: any, file: any) => `${Date.now()}`,
   },
 });
 
 var upload = multer({
-  storage,
-}).single("image");
+  storage: storage,
+});
+
+var router = express.Router();
+
+/* GET get a user. */
+router.get("/", function (_req, res, _next) {
+  res.send("This is the user endpoint");
+});
+
 /* POST create user. */
-router.post("/", upload, async (req, res, next) => {
+router.post("/", upload.single("image"), async (req, res) => {
   // extract necessary params from body
   const {
     firstname,
@@ -42,10 +49,13 @@ router.post("/", upload, async (req, res, next) => {
     countryCode: string;
     isPublic: boolean;
   } = req.body;
+  console.log(req.file);
   let image;
   if (req.file) {
-    image = process.env.HOST + "/profiles/" + req.file.filename;
+    //req.url ?
+    image = req.file.path;
   }
+  console.log("IMAGE IS");
   console.log(image);
   let user = new User({
     image,
@@ -60,7 +70,7 @@ router.post("/", upload, async (req, res, next) => {
 });
 
 /* POST search for users based on filters. */
-router.post("/search", async (req, res, next) => {
+router.post("/search", async (req, res) => {
   var searchValue = req.body.searchValue;
   console.log(searchValue);
 

@@ -144,6 +144,9 @@ router.post("/", async (req, res, next) => {
             [Op.is]: null
           }
         },
+        dietaryRequirements: {
+          [Op.notIn]: dietaryRequirements
+        },
         fragranceFamily: {
           [Op.or]: {
             [Op.in]: fragranceFamilies,

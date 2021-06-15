@@ -47,6 +47,9 @@ class Product extends Model {
   cuisine?: string;
 
   @Column
+  dietaryRequirements?: string;
+
+  @Column
   fragranceFamily?: string;
 
   @Column

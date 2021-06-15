@@ -7,6 +7,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 import Cloudinary from "cloudinary";
 import { serialize } from "v8";
 import Wishlist from "../db_models/Wishlist";
+import Item from "../db_models/Item";
 require("dotenv").config();
 
 Cloudinary.v2.config({
@@ -95,6 +96,30 @@ router.post("/search", async (req, res) => {
     },
   });
   res.send(users);
+});
+
+/* POST search for users based on filters. */
+router.post("/wishlist", async (req, res) => {
+  var userId = req.body.userId;
+  console.log(userId);
+
+  var products: Product[] = await Product.findAll({
+    include: [
+      {
+        model: User,
+        where: { 
+          id: {
+            [Op.eq]: userId
+          }
+        },
+      },
+      {
+        model : Item,
+      }
+    ],
+  });
+
+  res.send(products);
 });
 
 export default router;

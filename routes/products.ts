@@ -145,7 +145,10 @@ router.post("/", async (req, res, next) => {
           }
         },
         dietaryRequirements: {
-          [Op.notIn]: dietaryRequirements
+          [Op.or]: {
+            [Op.is]: null,
+            [Op.notIn]: dietaryRequirements
+          }
         },
         fragranceFamily: {
           [Op.or]: {

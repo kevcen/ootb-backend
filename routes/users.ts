@@ -116,25 +116,23 @@ router.post("/wishlist", async (req, res) => {
   });
 
   console.log(user);
-  if (user) {
-    // only send wishlist if the user has said it to be public
-    if (user.public) {
-      res.send(user.wishlist);
-    } else {
-      // send category interests if not public profile
-      if (user.interests) {
-        var categories: Category[] = await Category.findAll({
-          where: {
-            name: {
-              [Op.in]: user.interests,
-            },
-          },
-        });
-        res.send(categories)
-      }
-    }
+
+  // only send wishlist if the user has said it to be public
+  if (user?.public) {
+    res.send(user.wishlist);
+  } else if (user?.interests) {
+    // send category interests if not public profile
+    var categories: Category[] = await Category.findAll({
+      where: {
+        name: {
+          [Op.in]: user.interests,
+        },
+      },
+    });
+    res.send(categories);
+  } else {
+    res.sendStatus(500).send({ error: "Couldn't find the user" });
   }
-  res.sendStatus(500).send({ error: "Couldn't find the user" });
 });
 
 export default router;

@@ -254,6 +254,7 @@ router.post("/", async (req, res, next) => {
       }
     });
 
+
     res.send(Array.from(filteredProducts));
   // } catch (error) {
     // res.status(400).send({ error: error.message });

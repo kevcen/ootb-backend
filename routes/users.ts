@@ -8,6 +8,7 @@ import Cloudinary from "cloudinary";
 import { serialize } from "v8";
 import Wishlist from "../db_models/Wishlist";
 import Item from "../db_models/Item";
+import Category from "../db_models/Category";
 require("dotenv").config();
 
 Cloudinary.v2.config({
@@ -45,15 +46,17 @@ router.post("/", upload.single("image"), async (req, res) => {
     wishlist: wishlistString,
     countryCode,
     isPublic,
+    interests: interestsString,
   }: {
     firstname: string;
     lastname: string;
     wishlist: string;
     countryCode: string;
     isPublic: boolean;
+    interests: string;
   } = req.body;
-  
   const wishlist: Product[] = JSON.parse(wishlistString);
+  const interests: Array<string> = JSON.parse(interestsString);
 
   let image;
   if (req.file) {
@@ -66,10 +69,14 @@ router.post("/", upload.single("image"), async (req, res) => {
     lastname,
     countryCode,
     isPublic,
+    interests,
   });
 
-  user = await user.save()
-  await user.$set("wishlist", wishlist.map(prod => prod.id))
+  user = await user.save();
+  await user.$set(
+    "wishlist",
+    wishlist.map((prod) => prod.id)
+  );
 
   res.send(user);
 });
@@ -77,24 +84,22 @@ router.post("/", upload.single("image"), async (req, res) => {
 /* POST search for users based on filters. */
 router.post("/search", async (req, res) => {
   var searchValue = req.body.searchValue;
-  console.log(searchValue);
-
-  var users: User[] = await User.findAll({
-    where: {
-      [Op.or]: [
-        {
-          firstname: {
-            [Op.iLike]: "%" + searchValue + "%",
-          },
-        },
-        {
-          lastname: {
-            [Op.iLike]: "%" + searchValue + "%",
-          },
-        },
-      ],
+  var split = searchValue.split(" ");
+  var firstname = split[0];
+  var lastname = split[1];
+  const where: any = {
+    firstname: {
+      [Op.iLike]: firstname + "%",
     },
+  };
+  if (lastname) {
+    where.lastname = { [Op.iLike]: lastname + "%" };
+  }
+  var users: User[] = await User.findAll({
+    attributes: ["id", "firstname", "lastname", "image"],
+    where: where,
   });
+  console.log(users);
   res.send(users);
 });
 
@@ -103,23 +108,33 @@ router.post("/wishlist", async (req, res) => {
   var userId = req.body.userId;
   console.log(userId);
 
-  var products: Product[] = await Product.findAll({
-    include: [
-      {
-        model: User,
-        where: { 
-          id: {
-            [Op.eq]: userId
-          }
-        },
-      },
-      {
-        model : Item,
-      }
-    ],
+  var user: User | null = await User.findOne({
+    where: {
+      id: userId,
+    },
+    include: [Product],
   });
 
-  res.send(products);
+  console.log(user);
+  if (user) {
+    // only send wishlist if the user has said it to be public
+    if (user.public) {
+      res.send(user.wishlist);
+    } else {
+      // send category interests if not public profile
+      if (user.interests) {
+        var categories: Category[] = await Category.findAll({
+          where: {
+            name: {
+              [Op.in]: user.interests,
+            },
+          },
+        });
+        res.send(categories)
+      }
+    }
+  }
+  res.sendStatus(500).send({ error: "Couldn't find the user" });
 });
 
 export default router;

@@ -6,6 +6,7 @@ import {
   CreatedAt,
   BelongsTo,
   BelongsToMany,
+  DataType,
 } from "sequelize-typescript";
 import Product from "./Product";
 import Wishlist from "./Wishlist";
@@ -32,6 +33,9 @@ class User extends Model {
 
   @BelongsToMany(() => Product, () => Wishlist)
   wishlist!: Product[];
+
+  @Column({type: DataType.ARRAY(DataType.STRING)})
+  interests!: Array<string>;
 
   @CreatedAt
   @Column

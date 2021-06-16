@@ -11,6 +11,9 @@ class Category extends Model {
 
   @BelongsToMany(() => Product, ()=>ProductCategory)
   products?: Product[];
+
+  @Column
+  image!: string;
 }
 
 export default Category;

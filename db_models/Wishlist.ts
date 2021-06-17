@@ -1,11 +1,10 @@
-import {Model, Column, Table, ForeignKey} from "sequelize-typescript";
+import { Model, Column, Table, ForeignKey } from "sequelize-typescript";
 import Category from "./Category";
 import Product from "./Product";
 import User from "./User";
 
 @Table
 class Wishlist extends Model {
-
   @ForeignKey(() => Product)
   @Column
   productId!: number;
@@ -13,6 +12,9 @@ class Wishlist extends Model {
   @ForeignKey(() => User)
   @Column
   userId!: number;
+
+  @Column
+  alreadyBought!: boolean;
 }
 
-export default Wishlist
+export default Wishlist;

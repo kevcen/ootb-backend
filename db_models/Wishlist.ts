@@ -1,4 +1,11 @@
-import { Model, Column, Table, ForeignKey, HasMany, BelongsToMany } from "sequelize-typescript";
+import {
+  Model,
+  Column,
+  Table,
+  ForeignKey,
+  HasMany,
+  BelongsToMany,
+} from "sequelize-typescript";
 import { BelongsTo } from "sequelize/types";
 import Payment from "./Payment";
 import Product from "./Product";
@@ -18,7 +25,7 @@ class Wishlist extends Model {
   alreadyBought!: boolean;
 
   @Column
-  chippedInTotal?: number;
+  chippedInTotal!: number;
 }
 
 export default Wishlist;

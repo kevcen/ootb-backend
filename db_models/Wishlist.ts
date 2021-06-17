@@ -15,6 +15,9 @@ class Wishlist extends Model {
 
   @Column
   alreadyBought!: boolean;
+
+  @Column
+  chippedInTotal?: number;
 }
 
 export default Wishlist;

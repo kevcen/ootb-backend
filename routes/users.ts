@@ -27,7 +27,7 @@ const storage = new CloudinaryStorage({
 
 var upload = multer({
   storage: storage,
-});
+}).single("image");
 
 var router = express.Router();
 
@@ -37,7 +37,21 @@ router.get("/", function (_req, res, _next) {
 });
 
 /* POST create user. */
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", async (req, res) => {
+ // No need to await  this middleware
+ upload(req, res, async (err) => {
+  // Refactor to using recommended multer error handling
+  // https://github.com/expressjs/multer#error-handling
+  if (err instanceof multer.MulterError) {
+    // A Multer error occurred when uploading.
+    console.log("multer error when uploading file:", err);
+    return res.sendStatus(500);
+  } else if (err) {
+    // An unknown error occurred when uploading.
+    console.log("unknown error when uploading file:", err);
+    return res.sendStatus(500);
+  }
+
   // extract necessary params from body
   const {
     firstname,
@@ -79,6 +93,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   );
 
   res.send(user);
+ })
 });
 
 /* POST search for users based on filters. */

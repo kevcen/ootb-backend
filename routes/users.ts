@@ -5,12 +5,11 @@ import multer from "multer";
 import { Op } from "sequelize";
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 import Cloudinary from "cloudinary";
-import { serialize } from "v8";
-import Wishlist from "../db_models/Wishlist";
 import Item from "../db_models/Item";
 import Category from "../db_models/Category";
-require("dotenv").config();
+import * as dotenv from "dotenv";
 
+dotenv.config();
 Cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
@@ -100,7 +99,7 @@ router.post("/search", async (req, res) => {
   });
 
   console.log(users);
-  
+
   res.send(users);
 });
 

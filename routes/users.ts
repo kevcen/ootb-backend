@@ -117,8 +117,10 @@ router.post("/wishlist", async (req, res) => {
 
   console.log(user);
 
-  // only send wishlist if the user has said it to be public
-  if (user?.public) {
+  if (!user) {
+    res.status(400).send({ error: "User does not exist" });
+  } else if (user?.public && user.wishlist.length > 0) {
+    // only send wishlist if the user has said it to be public
     res.send(user.wishlist);
   } else if (user?.interests) {
     // send category interests if not public profile
@@ -131,7 +133,7 @@ router.post("/wishlist", async (req, res) => {
     });
     res.send(categories);
   } else {
-    res.sendStatus(500).send({ error: "Couldn't find the user" });
+    res.status(404).send({ error: "Couldn't find the user" });
   }
 });
 

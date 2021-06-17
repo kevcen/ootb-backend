@@ -10,7 +10,7 @@ function formatStr(str: any) {
   return (str || "any").toLowerCase();
 }
 
-function formatCol(col: any) : string[]{
+function formatCol(col: any): string[] {
   return Array.from(col || []);
 }
 
@@ -24,6 +24,7 @@ function printArray(arr: string[]) {
 
 /* POST simple get products by categories */
 router.post("/", async (req, res, next) => {
+  try {
     console.log(req.body);
     var categories: string[] = formatCol(req.body.categories);
     var price: string[] = req.body.price || [0, Number.MAX_SAFE_INTEGER];
@@ -76,189 +77,188 @@ router.post("/", async (req, res, next) => {
     var playSports: string[] = formatCol(req.body.playSports);
     var watchSports: string[] = formatCol(req.body.watchSports);
 
-
     var products: Product[] = await Product.findAll({
       include: [
         {
           model: Category,
-          where: { 
-            name: categories
+          where: {
+            name: categories,
           },
           // TODO: use, occasion
-        },{
-          model : Item,
+        },
+        {
+          model: Item,
           where: {
             cost: {
               [Op.lte]: price[1],
-              [Op.gte]: price[0]
-            }
-          }
-        }
+              [Op.gte]: price[0],
+            },
+          },
+        },
       ],
       where: {
         gender: {
           [Op.or]: {
             [Op.in]: gender,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         relationship: {
           [Op.or]: {
             [Op.in]: relationship,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         clothesStoreType: {
           [Op.or]: {
             [Op.in]: clothesStoreTypes,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         clothingSeason: {
           [Op.or]: {
             [Op.in]: clothingSeasons,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         fashionWear: {
           [Op.or]: {
             [Op.in]: fashionWear,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         doesCook: {
           [Op.or]: {
             [Op.eq]: doesCook,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         doesDrink: {
           [Op.or]: {
             [Op.eq]: doesDrink,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         cuisine: {
           [Op.or]: {
             [Op.in]: cuisines,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         dietaryRequirements: {
           [Op.or]: {
             [Op.is]: null,
-            [Op.notIn]: dietaryRequirements
-          }
+            [Op.notIn]: dietaryRequirements,
+          },
         },
         fragranceFamily: {
           [Op.or]: {
             [Op.in]: fragranceFamilies,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         perfumeType: {
           [Op.or]: {
             [Op.in]: perfumeTypes,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         hasGreenhouse: {
           [Op.or]: {
             [Op.eq]: hasGreenhouse,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         plantSize: {
           [Op.or]: {
             [Op.in]: plantSizes,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         plantType: {
           [Op.or]: {
             [Op.in]: plantTypes,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         likesMakeup: {
           [Op.or]: {
             [Op.eq]: likesMakeup,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         beautyProductType: {
           [Op.or]: {
             [Op.in]: beautyProductTypes,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         homeRoom: {
           [Op.or]: {
             [Op.in]: homeRooms,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         homeStyle: {
           [Op.or]: {
             [Op.in]: homeStyles,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         genre: {
           [Op.or]: {
             [Op.in]: genres,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         instrument: {
           [Op.or]: {
             [Op.in]: instruments,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         cameraType: {
           [Op.or]: {
             [Op.in]: cameraTypes,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         photographyExperience: {
           [Op.or]: {
             [Op.in]: photographyExperience,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         playSport: {
           [Op.or]: {
             [Op.in]: playSports,
-            [Op.is]: null
-          }
+            [Op.is]: null,
+          },
         },
         watchSport: {
           [Op.or]: {
             [Op.in]: watchSports,
-            [Op.is]: null
-          }
-        }
-      }
+            [Op.is]: null,
+          },
+        },
+      },
     });
 
-    console.log(products)
+    console.log(products);
     var filteredNames = new Set<string>();
     var filteredProducts = new Set();
-    
-    products.forEach(product => {
-      if(!filteredNames.has(product.name)){
+
+    products.forEach((product) => {
+      if (!filteredNames.has(product.name)) {
         filteredProducts.add(product);
-        filteredNames.add(product.name)
+        filteredNames.add(product.name);
       }
     });
 
-
     res.send(Array.from(filteredProducts));
-  // } catch (error) {
-    // res.status(400).send({ error: error.message });
-  // }
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
 });
 
 export default router;

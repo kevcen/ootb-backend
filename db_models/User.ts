@@ -7,6 +7,7 @@ import {
   BelongsTo,
   BelongsToMany,
   DataType,
+  AllowNull,
 } from "sequelize-typescript";
 import Product from "./Product";
 import Wishlist from "./Wishlist";
@@ -33,7 +34,8 @@ class User extends Model {
 
   @BelongsToMany(() => Product, () => Wishlist)
   wishlist!: Product[];
-
+  
+  @AllowNull(false)
   @Column({type: DataType.ARRAY(DataType.STRING)})
   interests!: Array<string>;
 

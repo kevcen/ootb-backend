@@ -1,5 +1,6 @@
-import { Model, Column, Table, ForeignKey } from "sequelize-typescript";
-import Category from "./Category";
+import { Model, Column, Table, ForeignKey, HasMany, BelongsToMany } from "sequelize-typescript";
+import { BelongsTo } from "sequelize/types";
+import Payment from "./Payment";
 import Product from "./Product";
 import User from "./User";
 

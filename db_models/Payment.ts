@@ -1,17 +1,24 @@
-import {Model, Column, Table, ForeignKey, DataType} from "sequelize-typescript";
+import {Model, Column, Table, ForeignKey, DataType, PrimaryKey} from "sequelize-typescript";
 import User from "./User";
-import Item from "./Item";
+import Product from "./Product";
 
 @Table
 class Payment extends Model {
 
-  @ForeignKey(() => Item)
+  @PrimaryKey
   @Column
-  itemId!: number;
+  id!: number;
+  
+  @ForeignKey(() => Product)
+  @Column
+  productId!: number;
 
   @ForeignKey(() => User)
   @Column
   userId!: number;
+
+  @Column
+  payerName!: string;
 
   @Column({ type: DataType.FLOAT })
   payment?: number; //how much the user is willing to chip in

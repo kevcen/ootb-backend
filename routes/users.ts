@@ -9,6 +9,7 @@ import Item from "../db_models/Item";
 import Category from "../db_models/Category";
 import * as dotenv from "dotenv";
 import Wishlist from "../db_models/Wishlist";
+import Payment from "../db_models/Payment";
 
 dotenv.config();
 Cloudinary.v2.config({
@@ -161,9 +162,13 @@ router.post("/interested", async (req, res) => {
 });
 
 router.post("/chip", async (req, res) => {
-  var money = req.body.chipAmount;
-  var productId = req.body.productId;
-  var userId = req.body.userId;
+  var money: number = req.body.chipAmount;
+  var productId: number = req.body.productId;
+  var userId: number = req.body.userId;
+  var payerName: string = req.body.payerName;
+
+  var payment = new Payment({ payerName, productId, userId, payment: money });
+  await payment.save();
 
   var updateResult = await Wishlist.increment("chippedInTotal", {
     by: money,

@@ -181,8 +181,8 @@ router.post("/chip", async (req, res) => {
   }
 });
 router.post("/sendemail", async (req, res) => {
-  // var userId = req.body.userId;
-  var userId = 2;
+  var userId = req.body.userId;
+  // var userId = 2;
   console.log(userId);
 
   var user: User | null = await User.findOne({
@@ -767,7 +767,7 @@ router.post("/sendemail", async (req, res) => {
             
                 <div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
           <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
-            <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #000;font-size: 22px;line-height: 31px;"><strong>This is Kevin's wishlist</strong></h2><h3 style="Margin-top: 16px;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #000;font-size: 16px;line-height: 24px;">Kevin has decided to give you his wishlist!</h3>
+            <h2 style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #000;font-size: 22px;line-height: 31px;"><strong>This is ${user.firstname} ${user.lastname}'s wishlist</strong></h2><h3 style="Margin-top: 16px;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #000;font-size: 16px;line-height: 24px;">${user.firstname} has decided to give you his wishlist!</h3>
           </div>
         </div>
             

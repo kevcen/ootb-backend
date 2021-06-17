@@ -56,7 +56,8 @@ router.post("/", upload.single("image"), async (req, res) => {
   } = req.body;
   const wishlist: Product[] = JSON.parse(wishlistString);
   const interests: Array<string> = JSON.parse(interestsString);
-
+  console.log(wishlist)
+  console.log(interests)
   let image;
   if (req.file) {
     image = req.file.path;

@@ -67,13 +67,14 @@ function onError(error: any): void {
  * Event listener for HTTP server "listening" event.
  */
 function onListening() {
-    // bind server to port
-    var addr = server.address();
-    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
-    console.log("Listening on " + bind);
+  // bind server to port
+  var addr = server.address();
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
+  console.log("Listening on " + bind);
 
-    // connect to DB
-    sequelize.sync({alter:true}).then(()=>
-    console.log("Connected to DB: " + sequelize.getDatabaseName()))
-    .catch(err=>console.log(err))
+  // connect to DB
+  sequelize
+    .sync()
+    .then(() => console.log("Connected to DB: " + sequelize.getDatabaseName()))
+    .catch((err) => console.log(err));
 }

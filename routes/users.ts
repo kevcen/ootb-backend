@@ -7,6 +7,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 import Cloudinary from "cloudinary";
 import Item from "../db_models/Item";
 import Category from "../db_models/Category";
+import Wishlist from "../db_models/Wishlist";
 import * as dotenv from "dotenv";
 
 dotenv.config();

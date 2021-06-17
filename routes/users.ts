@@ -7,8 +7,8 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 import Cloudinary from "cloudinary";
 import Item from "../db_models/Item";
 import Category from "../db_models/Category";
-import Wishlist from "../db_models/Wishlist";
 import * as dotenv from "dotenv";
+import Wishlist from "../db_models/Wishlist";
 
 dotenv.config();
 Cloudinary.v2.config({
@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
 
 var upload = multer({
   storage: storage,
-}).single("image");
+});
 
 var router = express.Router();
 
@@ -38,63 +38,47 @@ router.get("/", function (_req, res, _next) {
 });
 
 /* POST create user. */
-router.post("/", async (req, res) => {
-  // No need to await  this middleware
-  upload(req, res, async (err) => {
-    // Refactor to using recommended multer error handling
-    // https://github.com/expressjs/multer#error-handling
-    if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
-      console.log("multer error when uploading file:", err);
-      return res.sendStatus(500);
-    } else if (err) {
-      // An unknown error occurred when uploading.
-      console.log("unknown error when uploading file:", err);
-      return res.sendStatus(500);
-    }
+router.post("/", upload.single("image"), async (req, res) => {
+  // extract necessary params from body
+  const {
+    firstname,
+    lastname,
+    wishlist: wishlistString,
+    countryCode,
+    isPublic,
+    interests: interestsString,
+  }: {
+    firstname: string;
+    lastname: string;
+    wishlist: string;
+    countryCode: string;
+    isPublic: boolean;
+    interests: string;
+  } = req.body;
+  const wishlist: Product[] = JSON.parse(wishlistString);
+  const interests: Array<string> = JSON.parse(interestsString);
 
-    // extract necessary params from body
-    const {
-      firstname,
-      lastname,
-      wishlist: wishlistString,
-      countryCode,
-      isPublic,
-      interests: interestsString,
-    }: {
-      firstname: string;
-      lastname: string;
-      wishlist: string;
-      countryCode: string;
-      isPublic: boolean;
-      interests: string;
-    } = req.body;
-    const wishlist: Product[] = JSON.parse(wishlistString);
-    const interests: Array<string> = JSON.parse(interestsString);
-    console.log(wishlist);
-    console.log(interests);
-    let image;
-    if (req.file) {
-      image = req.file.path;
-    }
+  let image;
+  if (req.file) {
+    image = req.file.path;
+  }
 
-    let user = new User({
-      image,
-      firstname,
-      lastname,
-      countryCode,
-      isPublic,
-      interests,
-    });
-
-    user = await user.save();
-    await user.$set(
-      "wishlist",
-      wishlist.map((prod) => prod.id)
-    );
-
-    res.send(user);
+  let user = new User({
+    image,
+    firstname,
+    lastname,
+    countryCode,
+    isPublic,
+    interests,
   });
+
+  user = await user.save();
+  await user.$set(
+    "wishlist",
+    wishlist.map((prod) => prod.id)
+  );
+
+  res.send(user);
 });
 
 /* POST search for users based on filters. */

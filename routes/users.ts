@@ -176,4 +176,24 @@ router.post("/interested", async (req, res) => {
   });
 });
 
+router.post("/chip", async (req, res) => {
+  var money = req.body.chipAmount;
+  var productId = req.body.productId;
+  var userId = req.body.userId;
+
+  var updateResult = await Wishlist.increment("chippedInTotal", {
+    by: money,
+    where: {
+      productId: productId,
+      userId: userId,
+    },
+  });
+
+  if (updateResult) {
+    res.send(updateResult);
+  } else {
+    res.send(null);
+  }
+});
+
 export default router;

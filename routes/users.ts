@@ -100,7 +100,6 @@ router.post("/search", async (req, res) => {
   });
 
   console.log(users);
-  
   res.send(users);
 });
 
@@ -113,7 +112,7 @@ router.post("/wishlist", async (req, res) => {
     where: {
       id: userId,
     },
-    include: [{model : Product, include : [Item]}],
+    include: [{ model: Product, include: [Item] }],
   });
 
   console.log(user);
@@ -136,6 +135,28 @@ router.post("/wishlist", async (req, res) => {
   } else {
     res.status(404).send({ error: "Couldn't find the user" });
   }
+});
+
+router.post("/interested", async (req, res) => {
+  var productId = req.body.productId;
+  var userId = req.body.userId;
+
+  var updateResult = Wishlist.update(
+    { alreadyBought: true },
+    {
+      where: {
+        productId: productId,
+        userId: userId,
+      },
+      returning: true, // tell Sequelize to return the object
+    }
+  ).then((result) => {
+    if (result[1].length > 0) {
+      res.send(result[1]);
+    } else {
+      res.send([]);
+    }
+  });
 });
 
 export default router;

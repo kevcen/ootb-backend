@@ -4,11 +4,6 @@ import Product from "./Product";
 
 @Table
 class Payment extends Model {
-
-  @PrimaryKey
-  @Column
-  id!: number;
-  
   @ForeignKey(() => Product)
   @Column
   productId!: number;

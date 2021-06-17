@@ -27,7 +27,7 @@ class User extends Model {
   image?: string;
 
   @Column
-  public?: boolean;
+  public!: boolean;
 
   @Column
   countryCode!: string;

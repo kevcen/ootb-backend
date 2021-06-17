@@ -96,10 +96,11 @@ router.post("/search", async (req, res) => {
     where.lastname = { [Op.iLike]: lastname + "%" };
   }
   var users: User[] = await User.findAll({
-    attributes: ["id", "firstname", "lastname", "image"],
     where: where,
   });
+
   console.log(users);
+  
   res.send(users);
 });
 
@@ -112,7 +113,7 @@ router.post("/wishlist", async (req, res) => {
     where: {
       id: userId,
     },
-    include: [Product],
+    include: [{model : Product, include : [Item]}],
   });
 
   console.log(user);

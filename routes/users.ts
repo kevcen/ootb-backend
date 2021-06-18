@@ -83,23 +83,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   res.send(user);
 });
 
-router.get("/wishlist/:userId/:productId", async (req, res) => {
-  let userId = req.params.userId;
-  let productId = req.params.productId;
 
-  let wishlist = await Wishlist.findOne({
-    where: {
-      userId: userId,
-      productId: productId,
-    },
-  });
-
-  if (wishlist) {
-    res.send(wishlist.chippedInTotal);
-  } else {
-    res.status(403).send({ error: "Couldn't find the wishlist" });
-  }
-});
 
 /* POST search for users based on filters. */
 router.post("/search", async (req, res) => {
@@ -158,6 +142,24 @@ router.post("/wishlist", async (req, res) => {
   }
 });
 
+router.get("/wishlist/:userId/:productId", async (req, res) => {
+  let userId = req.params.userId;
+  let productId = req.params.productId;
+
+  let wishlist = await Wishlist.findOne({
+    where: {
+      userId: userId,
+      productId: productId,
+    },
+  });
+
+  if (wishlist) {
+    res.send(wishlist);
+  } else {
+    res.status(403).send({ error: "Couldn't find the wishlist" });
+  }
+});
+
 router.post("/interested", async (req, res) => {
   var productId = req.body.productId;
   var userId = req.body.userId;
@@ -184,6 +186,7 @@ router.post("/chip", async (req, res) => {
   var money: number = req.body.money;
   var productId: number = req.body.productId;
   var userId: number = req.body.userId;
+  var totalCost: number = req.body.totalCost;
   var payerName: string = req.body.payerName;
 
   console.log(money, productId, userId, payerName);
@@ -200,6 +203,7 @@ router.post("/chip", async (req, res) => {
 
   if (wishlist) {
     wishlist.chippedInTotal += money;
+    wishlist.alreadyBought = wishlist.chippedInTotal >= totalCost;
     await wishlist.save();
     res.send(wishlist);
   } else {

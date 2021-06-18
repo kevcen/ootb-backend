@@ -83,6 +83,24 @@ router.post("/", upload.single("image"), async (req, res) => {
   res.send(user);
 });
 
+router.get("/wishlist/:userId/:productId", async (req, res) => {
+  let userId = req.params.userId;
+  let productId = req.params.productId;
+
+  let wishlist = await Wishlist.findOne({
+    where: {
+      userId: userId,
+      productId: productId,
+    },
+  });
+
+  if (wishlist) {
+    res.send(wishlist.chippedInTotal);
+  } else {
+    res.status(403).send({ error: "Couldn't find the wishlist" });
+  }
+});
+
 /* POST search for users based on filters. */
 router.post("/search", async (req, res) => {
   var searchValue = req.body.searchValue;
@@ -163,24 +181,27 @@ router.post("/interested", async (req, res) => {
 });
 
 router.post("/chip", async (req, res) => {
-  var money: number = req.body.chipAmount;
+  var money: number = req.body.money;
   var productId: number = req.body.productId;
   var userId: number = req.body.userId;
   var payerName: string = req.body.payerName;
 
+  console.log(money, productId, userId, payerName);
+
   var payment = new Payment({ payerName, productId, userId, payment: money });
   await payment.save();
 
-  var updateResult = await Wishlist.increment("chippedInTotal", {
-    by: money,
+  var wishlist = await Wishlist.findOne({
     where: {
       productId: productId,
       userId: userId,
     },
   });
 
-  if (updateResult) {
-    res.send(updateResult);
+  if (wishlist) {
+    wishlist.chippedInTotal += money;
+    await wishlist.save();
+    res.send(wishlist);
   } else {
     res.send(null);
   }
@@ -194,33 +215,32 @@ router.post("/sendemail", async (req, res) => {
     where: {
       id: userId,
     },
-    include: [{model : Product, include : [Item]}],
+    include: [{ model: Product, include: [Item] }],
   });
 
   var emailAddresses = req.body.emailAddresses;
   var transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    service: 'gmail',
+    host: "smtp.gmail.com",
+    service: "gmail",
     auth: {
-      user: 'oftheoutbox@gmail.com',
-      pass: 'omg1234whatisevengoingon4321'
-    }
+      user: "oftheoutbox@gmail.com",
+      pass: "omg1234whatisevengoingon4321",
+    },
   });
 
   var wishlistText = "";
-  if(!user) {
+  if (!user) {
     res.status(400).send({ error: "User does not exist" });
-  }
-  else {
+  } else {
     for (let product of user.wishlist) {
       var itemText = "";
-      
+
       for (let item of product.items) {
         itemText += `<div style="Margin-left: 20px;Margin-right: 20px;Margin-bottom: 24px;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
           <p style="Margin-top: 0;Margin-bottom: 0;">&#163;${item.cost} ${item.website}</p>
         </div>
-      </div>`
+      </div>`;
       }
 
       wishlistText += `        <div class="layout two-col fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
@@ -247,16 +267,15 @@ router.post("/sendemail", async (req, res) => {
         </div>
       <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
       </div>
-    </div>`
+    </div>`;
     }
 
-
-    for(let email of emailAddresses) {
+    for (let email of emailAddresses) {
       var mailOptions = {
-        from: 'oftheoutbox@gmail.com',
+        from: "oftheoutbox@gmail.com",
         to: email,
         subject: `Out Of The Box - ${user?.firstname} ${user?.lastname}'s wishlist`,
-        text: 'That was easy!',
+        text: "That was easy!",
         html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--[if IE]><html xmlns="http://www.w3.org/1999/xhtml" class="ie"><![endif]--><!--[if !IE]><!--><html style="margin: 0;padding: 0;" xmlns="http://www.w3.org/1999/xhtml"><!--<![endif]--><head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title></title>
@@ -880,17 +899,19 @@ router.post("/sendemail", async (req, res) => {
     </body></html>`,
       };
 
-      transporter.sendMail(mailOptions, (error: any, info: { response: string; }) =>{
-        if (error) {
-          console.log("not email send");
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
+      transporter.sendMail(
+        mailOptions,
+        (error: any, info: { response: string }) => {
+          if (error) {
+            console.log("not email send");
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
         }
-      });
+      );
     }
   }
-
-})
+});
 
 export default router;

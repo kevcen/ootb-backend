@@ -70,7 +70,7 @@ router.post("/", upload.single("image"), async (req, res) => {
     firstname,
     lastname,
     countryCode,
-    isPublic,
+    public : isPublic,
     interests,
   });
 
